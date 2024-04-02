@@ -1,0 +1,29 @@
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+# Simulated garage door status
+garage_door_status = "closed"
+
+# Endpoint to get the current status of the garage door
+@app.route('/status', methods=['GET'])
+def get_status():
+    return jsonify({'status': garage_door_status})
+
+# Endpoint to open/close the garage door
+@app.route('/control', methods=['POST'])
+def control_garage_door():
+    global garage_door_status
+    action = request.json.get('action')
+
+    if action == 'open':
+        garage_door_status = "open"
+        return jsonify({'message': 'Garage door is now open'})
+    elif action == 'close':
+        garage_door_status = "closed"
+        return jsonify({'message': 'Garage door is now closed'})
+    else:
+        return jsonify({'error': 'Invalid action'})
+
+if __name__ == '__main__':
+    app.run(debug=True)
