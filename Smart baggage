@@ -1,0 +1,26 @@
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+# Simulated baggage location
+baggage_location = {
+    "latitude": None,
+    "longitude": None
+}
+
+# Endpoint to get the current location of the baggage
+@app.route('/location', methods=['GET'])
+def get_location():
+    return jsonify(baggage_location)
+
+# Endpoint to update the location of the baggage
+@app.route('/update_location', methods=['POST'])
+def update_location():
+    global baggage_location
+    data = request.json
+    baggage_location["latitude"] = data["latitude"]
+    baggage_location["longitude"] = data["longitude"]
+    return jsonify({'message': 'Baggage location updated successfully'})
+
+if __name__ == '__main__':
+    app.run(debug=True)
