@@ -1,0 +1,28 @@
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+# Simulated cradle status
+cradle_status = {
+    "is_crying": False,
+    "humidity": 50,
+    "temperature": 25
+}
+
+# Endpoint to get the current status of the cradle
+@app.route('/status', methods=['GET'])
+def get_status():
+    return jsonify(cradle_status)
+
+# Endpoint to update the cradle status (simulated cry detection)
+@app.route('/update', methods=['POST'])
+def update_status():
+    global cradle_status
+    data = request.json
+    cradle_status["is_crying"] = data["is_crying"]
+    cradle_status["humidity"] = data["humidity"]
+    cradle_status["temperature"] = data["temperature"]
+    return jsonify({'message': 'Cradle status updated successfully'})
+
+if __name__ == '__main__':
+    app.run(debug=True)
