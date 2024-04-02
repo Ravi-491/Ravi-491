@@ -1,0 +1,45 @@
+from flask import Flask, request, jsonify
+import random
+
+app = Flask(__name__)
+
+# Simulated traffic light status
+traffic_light_status = {
+    "main_street": "green",
+    "side_street": "red"
+}
+
+# Simulated traffic violation database
+traffic_violations = []
+
+# Endpoint to get the current status of the traffic lights
+@app.route('/status', methods=['GET'])
+def get_status():
+    return jsonify(traffic_light_status)
+
+# Endpoint to update the traffic light status
+@app.route('/update', methods=['POST'])
+def update_status():
+    global traffic_light_status
+    data = request.json
+    traffic_light_status["main_street"] = data["main_street"]
+    traffic_light_status["side_street"] = data["side_street"]
+    return jsonify({'message': 'Traffic light status updated successfully'})
+
+# Endpoint to simulate a traffic violation
+@app.route('/violation', methods=['POST'])
+def simulate_violation():
+    global traffic_violations
+    data = request.json
+    vehicle_id = data["vehicle_id"]
+    violation_type = data["violation_type"]
+    traffic_violations.append({"vehicle_id": vehicle_id, "violation_type": violation_type})
+    return jsonify({'message': 'Traffic violation recorded successfully'})
+
+# Endpoint to get the list of recorded traffic violations
+@app.route('/violations', methods=['GET'])
+def get_violations():
+    return jsonify(traffic_violations)
+
+if __name__ == '__main__':
+    app.run(debug=True)
